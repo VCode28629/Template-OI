@@ -1,16 +1,22 @@
 #include<cstdio>
 #include<cstring>
 
-int arr[100000];
-int buf[100000];
+const int MAX_NUM = 1e5;
+
+int arr[MAX_NUM];
 int num;
 
 void sort(int *arr, int len) {
-  int t[4][256];
-  memset(t, 0, sizeof(t));
+  static int buf[MAX_NUM];
+  int cnt[4][256];
+  for(int i = 0; i < 4; ++i) {
+    for(int j = 0; j < 256; ++j) {
+      cnt[i][j] = 0;
+    }
+  }
   for(int i = 0; i < 4; ++i) {
     for(int j = 0; j < len; ++j) {
-      ++t[i][(arr[j] >> (i << 3)) & 255];
+      ++cnt[i][(arr[j] >> (i << 3)) & 255];
     }
   }
   int *a = arr;
@@ -20,7 +26,7 @@ void sort(int *arr, int len) {
     int loc = -1;
     for(int j = 0; j < 256; ++j) {
       local[j] = loc;
-      loc += t[i][j];
+      loc += cnt[i][j];
     }
     for(int j = 0; j < len; ++j) {
       b[++local[(a[j] >> (i << 3)) & 255]] = a[j];
@@ -31,6 +37,7 @@ void sort(int *arr, int len) {
   }
   return;
 }
+
 
 int main() {
   scanf("%d", &num);
